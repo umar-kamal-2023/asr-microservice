@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+python-multipart
+pydantics
+openai-whisper
+torchaudio
+torch
+ffmpeg-python
+noisereduce
+demucs
+numpy
+soundfile
+requests
