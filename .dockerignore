@@ -1,4 +1,3 @@
-*.wav
 my_env/
-.env
+*.wav
 seperated/
