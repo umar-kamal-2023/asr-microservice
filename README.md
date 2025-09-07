@@ -39,53 +39,136 @@ sudo docker compose up --build
 
 ### 4. Access API
 - Swagger docs: [http://localhost:8000/docs](http://localhost:8000/docs)  
-- Health check:  
-  ```bash
-  curl http://localhost:8000/health
-  ```
 
 ---
 
 ## Testing with Sample Audio
 
-This repo includes **5 sample clips** (`sample_audio/`) to test noise, overlap, and diarization.  
+This repo includes **5 sample clips** (`samples/`) to test noise, overlap, and diarization.  
 
 Run:
 ```bash
 curl -X POST "http://localhost:8000/v1/transcribe" \
-     -F "file=@sample_audio/noisy_clip.wav"
+     -F "file=@samples/noisy_clip.wav"
 ```
 
 ### Expected Behaviors
 
-1. **`noisy_clip.wav`**  
+1. **`sample_noisy_background_15s.wav`**  
    - Café background noise, one speaker.  
    - Output (approx.):  
      ```json
-     {
-       "text": "Can I get a coffee please?"
-     }
+    {
+        "request_id": "000f1f7a-ed92-44d6-b027-69b5147f9da8",
+        "duration_sec": 4.041315192743764,
+        "sample_rate": 22050,
+        "pipeline": {
+            "separation": {
+                "enabled": true,
+                "method": "noisereduce"
+            },
+            "transcription": {
+                "model": "whisper-small"
+            },
+            "diarization": {
+                "enabled": false,
+                "method": null
+            }
+        },
+        "segments": [
+            {
+                "start": 0,
+                "end": 2.32,
+                "text": " Hello, this is a clean test audio."
+            },
+            {
+                "start": 2.32,
+                "end": 3.72,
+                "text": " 1, 2, 3, testing."
+            }
+        ],
+        "text": " Hello, this is a clean test audio. 1, 2, 3, testing.",
+        "language": "en",
+        "timings_ms": {
+            "load": 0,
+            "separation": 38094,
+            "transcription": 220046,
+            "total": 258140
+        }
+    }
      ```
 
-2. **`overlap.wav`**  
+2. **`sample_overlapping_20s.wav`**  
    - Two people speaking at once.  
    - Output: diarization splits them.  
      ```json
-     {
-       "segments": [
-         {"speaker": "SPEAKER_0", "text": "Hey, are you free later?"},
-         {"speaker": "SPEAKER_1", "text": "Yes, after 6 pm works."}
-       ]
-     }
+    {
+        "request_id": "8181ad10-6ef4-4762-a274-54ac6b05f71c",
+        "duration_sec": 3.212925170068027,
+        "sample_rate": 22050,
+        "pipeline": {
+            "separation": {
+                "enabled": true,
+                "method": "noisereduce"
+            },
+            "transcription": {
+                "model": "whisper-small"
+            },
+            "diarization": {
+                "enabled": false,
+                "method": null
+            }
+        },
+        "segments": [
+            {
+                "start": 0,
+                "end": 3,
+                "text": " Hi I'm speaker 1, I will speak for the first part."
+            }
+        ],
+        "text": " Hi I'm speaker 1, I will speak for the first part.",
+        "language": "en",
+        "timings_ms": {
+            "load": 12,
+            "separation": 72576,
+            "transcription": 19572,
+            "total": 92160
+        }
+    }
      ```
 
-3. **`clean.wav`**  
+3. **`sample_clean_10s.wav`**  
    - Studio quality, one speaker.  
    - Output:  
      ```json
-     {
-       "text": "This is a clean audio test."
-     }
+    {"request_id":"000f1f7a-ed92-44d6-b027-69b5147f9da8",
+    "duration_sec":4.041315192743764,
+    "sample_rate":22050,
+    "pipeline":{
+        "separation":{
+            "enabled":true,
+            "method":"noisereduce"
+            },
+            "transcription":
+            {
+                "model":"whisper-small"
+                },
+                "diarization":
+                {
+                    "enabled":false,
+                    "method":null
+                    }
+                    },
+                    "segments":
+                    [
+                        {"start":0.0,"end":2.32,"text":" Hello, this is a clean test audio."},
+                        {"start":2.32,"end":3.72,"text":" 1, 2, 3, testing."}
+                    ],
+                    "text":" Hello, this is a clean test audio. 1, 2, 3, testing.",
+                    "language":"en",
+                    "timings_ms":
+                    {"load":0,"separation":38094,"transcription":220046,"total":258140}
+    }
      ```
 
 4. **`music_bg.wav`**  
@@ -150,20 +233,32 @@ curl -X POST "http://localhost:8000/v1/transcribe" \
 
 **Response**:
 ```json
-{
-  "request_id": "3aef9c1f-5f3a-4a64-b3a2-6bbac3fd9187",
-  "duration_sec": 4.0,
-  "sample_rate": 16000,
-  "pipeline": {
-    "separation": {"enabled": true, "method": "demucs"},
-    "transcription": {"model": "whisper-small"},
-    "diarization": {"enabled": true, "method": "pyannote"}
-  },
-  "segments": [
-    {"start": 0.0, "end": 4.0, "speaker": "SPEAKER_0", "text": "This is a clean audio test."}
-  ],
-  "text": "This is a clean audio test.",
-  "language": "en",
-  "timings_ms": {"load": 420, "separation": 1800, "transcription": 4100, "total": 6400}
-}
+{"request_id":"000f1f7a-ed92-44d6-b027-69b5147f9da8",
+"duration_sec":4.041315192743764,
+"sample_rate":22050,
+"pipeline":{
+    "separation":{
+        "enabled":true,
+        "method":"noisereduce"
+        },
+        "transcription":
+        {
+            "model":"whisper-small"
+            },
+            "diarization":
+            {
+                "enabled":false,
+                "method":null
+                }
+                },
+                "segments":
+                [
+                    {"start":0.0,"end":2.32,"text":" Hello, this is a clean test audio."},
+                    {"start":2.32,"end":3.72,"text":" 1, 2, 3, testing."}
+                ],
+                "text":" Hello, this is a clean test audio. 1, 2, 3, testing.",
+                "language":"en",
+                "timings_ms":
+                {"load":0,"separation":38094,"transcription":220046,"total":258140}
+                }
 ```
