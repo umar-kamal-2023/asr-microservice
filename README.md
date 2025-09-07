@@ -32,6 +32,10 @@ sudo docker build -t asr-microservice:local .
 ```bash
 sudo docker run -p 8000:8000 --rm asr-microservice:local
 ```
+OR
+```bash
+sudo docker compose up --build
+```
 
 ### 4. Access API
 - Swagger docs: [http://localhost:8000/docs](http://localhost:8000/docs)  
@@ -126,7 +130,7 @@ curl -X POST "http://localhost:8000/v1/transcribe" \
 
 ---
 
-## ⚖️ Trade-offs & Decisions
+## Trade-offs & Decisions
 - **Whisper** chosen for robustness on noisy, multilingual audio. Trade-off: slower on CPU, but works offline.  
 - **Demucs** separation improves accuracy in music/noise scenarios, but adds latency.  
 - **Fallback noise suppression** ensures pipeline doesn’t fail completely if separation fails.  
