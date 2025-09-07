@@ -19,7 +19,7 @@ Supports noisy audio, overlapping speakers, and diarization.
 
 ### 1. Clone Repo
 ```bash
-git clone git@github.com:<your-username>/asr-microservice.git
+git clone git@github.com:umar-kamal-2023/asr-microservice.git
 cd asr-microservice
 ```
 
