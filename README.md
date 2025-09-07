@@ -54,143 +54,125 @@ curl -X POST "http://localhost:8000/v1/transcribe" \
 
 ### Expected Behaviors
 
-1. **`sample_noisy_background_15s.wav`**  
-   - Café background noise, one speaker.  
-   - Output (approx.):  
-     ```json
-    {
-        "request_id": "000f1f7a-ed92-44d6-b027-69b5147f9da8",
-        "duration_sec": 4.041315192743764,
-        "sample_rate": 22050,
-        "pipeline": {
-            "separation": {
-                "enabled": true,
-                "method": "noisereduce"
-            },
-            "transcription": {
-                "model": "whisper-small"
-            },
-            "diarization": {
-                "enabled": false,
-                "method": null
-            }
-        },
-        "segments": [
-            {
-                "start": 0,
-                "end": 2.32,
-                "text": " Hello, this is a clean test audio."
-            },
-            {
-                "start": 2.32,
-                "end": 3.72,
-                "text": " 1, 2, 3, testing."
-            }
-        ],
-        "text": " Hello, this is a clean test audio. 1, 2, 3, testing.",
-        "language": "en",
-        "timings_ms": {
-            "load": 0,
-            "separation": 38094,
-            "transcription": 220046,
-            "total": 258140
-        }
-    }
-     ```
-
-2. **`sample_overlapping_20s.wav`**  
-   - Two people speaking at once.  
-   - Output: diarization splits them.  
-     ```json
-    {
-        "request_id": "8181ad10-6ef4-4762-a274-54ac6b05f71c",
-        "duration_sec": 3.212925170068027,
-        "sample_rate": 22050,
-        "pipeline": {
-            "separation": {
-                "enabled": true,
-                "method": "noisereduce"
-            },
-            "transcription": {
-                "model": "whisper-small"
-            },
-            "diarization": {
-                "enabled": false,
-                "method": null
-            }
-        },
-        "segments": [
-            {
-                "start": 0,
-                "end": 3,
-                "text": " Hi I'm speaker 1, I will speak for the first part."
-            }
-        ],
-        "text": " Hi I'm speaker 1, I will speak for the first part.",
-        "language": "en",
-        "timings_ms": {
-            "load": 12,
-            "separation": 72576,
-            "transcription": 19572,
-            "total": 92160
-        }
-    }
-     ```
-
-3. **`sample_clean_10s.wav`**  
-   - Studio quality, one speaker.  
+1. **`sample_clean.wav`**  
+   - one speaker.  
    - Output:  
      ```json
-    {"request_id":"000f1f7a-ed92-44d6-b027-69b5147f9da8",
-    "duration_sec":4.041315192743764,
-    "sample_rate":22050,
-    "pipeline":{
-        "separation":{
-            "enabled":true,
-            "method":"noisereduce"
-            },
-            "transcription":
-            {
-                "model":"whisper-small"
+        {
+            "request_id":"000f1f7a-ed92-44d6-b027-69b5147f9da8",
+            "duration_sec":4.041315192743764,
+            "sample_rate":22050,
+            "pipeline":{
+            "separation":{
+                "enabled":true,
+                "method":"noisereduce"
                 },
-                "diarization":
+                "transcription":
                 {
-                    "enabled":false,
-                    "method":null
-                    }
+                    "model":"whisper-small"
                     },
-                    "segments":
-                    [
-                        {"start":0.0,"end":2.32,"text":" Hello, this is a clean test audio."},
-                        {"start":2.32,"end":3.72,"text":" 1, 2, 3, testing."}
-                    ],
-                    "text":" Hello, this is a clean test audio. 1, 2, 3, testing.",
-                    "language":"en",
-                    "timings_ms":
-                    {"load":0,"separation":38094,"transcription":220046,"total":258140}
-    }
+                    "diarization":
+                    {
+                        "enabled":false,
+                        "method":null
+                        }
+                        },
+                        "segments":
+                        [
+                            {"start":0.0,"end":2.32,"text":" Hello, this is a clean test audio."},
+                            {"start":2.32,"end":3.72,"text":" 1, 2, 3, testing."}
+                        ],
+                        "text":" Hello, this is a clean test audio. 1, 2, 3, testing.",
+                        "language":"en",
+                        "timings_ms":
+                        {"load":0,"separation":38094,"transcription":220046,"total":258140}
+        }
      ```
 
-4. **`music_bg.wav`**  
-   - Voice with music background.  
+
+2. **`sample_noisy_background.wav`**  
+   - background noise, one speaker.  
    - Output:  
      ```json
-     {
-       "text": "Thanks for calling, how can I help you?"
-     }
+        {
+            "request_id": "8f44f7cd-fe56-4a5c-8e3f-f1b7927c296f",
+            "duration_sec": 15,
+            "sample_rate": 22050,
+            "pipeline": {
+                "separation": {
+                    "enabled": true,
+                    "method": "noisereduce"
+                },
+                "transcription": {
+                    "model": "whisper-small"
+                },
+                "diarization": {
+                    "enabled": false,
+                    "method": null
+                }
+            },
+            "segments": [
+                {
+                    "start": 0,
+                    "end": 2,
+                    "text": " Now I'm speaking with background noise."
+                },
+                {
+                    "start": 2,
+                    "end": 15,
+                    "text": " The clip-brown hot stump, over the lazy dog."
+                }
+            ],
+            "text": " Now I'm speaking with background noise. The clip-brown hot stump, over the lazy dog.",
+            "language": "en",
+            "timings_ms": {
+                "load": 4,
+                "separation": 117293,
+                "transcription": 264521,
+                "total": 381818
+            }
+        }
      ```
 
-5. **`multi_speaker.wav`**  
-   - Multi-speaker turn taking.  
-   - Output:  
+3. **`sample_overlapping.wav`**  
+   - Two people speaking at once.  
+   - Output:
      ```json
-     {
-       "segments": [
-         {"speaker": "SPEAKER_0", "text": "Let's start the meeting."},
-         {"speaker": "SPEAKER_1", "text": "Sure, I’ll share the update."}
-       ]
-     }
+        {
+            "request_id": "8181ad10-6ef4-4762-a274-54ac6b05f71c",
+            "duration_sec": 3.212925170068027,
+            "sample_rate": 22050,
+            "pipeline": {
+                "separation": {
+                    "enabled": true,
+                    "method": "noisereduce"
+                },
+                "transcription": {
+                    "model": "whisper-small"
+                },
+                "diarization": {
+                    "enabled": false,
+                    "method": null
+                }
+            },
+            "segments": [
+                {
+                    "start": 0,
+                    "end": 3,
+                    "text": " Hi I'm speaker 1, I will speak for the first part."
+                }
+            ],
+            "text": " Hi I'm speaker 1, I will speak for the first part.",
+            "language": "en",
+            "timings_ms": {
+                "load": 12,
+                "separation": 72576,
+                "transcription": 19572,
+                "total": 92160
+            }
+        }
      ```
+
 
 ---
 
@@ -233,10 +215,11 @@ curl -X POST "http://localhost:8000/v1/transcribe" \
 
 **Response**:
 ```json
-{"request_id":"000f1f7a-ed92-44d6-b027-69b5147f9da8",
-"duration_sec":4.041315192743764,
-"sample_rate":22050,
-"pipeline":{
+{
+    "request_id":"000f1f7a-ed92-44d6-b027-69b5147f9da8",
+    "duration_sec":4.041315192743764,
+    "sample_rate":22050,
+    "pipeline":{
     "separation":{
         "enabled":true,
         "method":"noisereduce"
